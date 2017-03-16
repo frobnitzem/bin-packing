@@ -62,7 +62,8 @@ Demo = {
 
     Demo.canvas.reset(packer.root.w, packer.root.h);
     Demo.canvas.blocks(blocks);
-    Demo.canvas.boundary(packer.root);
+    if(Demo.el.size.val() != 'automatic')
+        Demo.canvas.boundary(packer.root);
     Demo.report(blocks, packer.root.w, packer.root.h);
   },
 
@@ -71,7 +72,13 @@ Demo = {
   packer: function() {
     var size = Demo.el.size.val();
     if (size == 'automatic') {
-      return new GrowingPacker();
+      var outer = $("#packing");
+      var pos   = outer.offset();
+      var win   = $(window);
+      var sz = { w: win.width() - pos.left,
+                 h: win.height() - pos.top};
+      outer.width(sz.w); outer.height(sz.h);
+      return new GrowingPacker(sz.w, sz.h);
     }
     else {
       var dims = size.split("x");

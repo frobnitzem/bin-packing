@@ -24,7 +24,7 @@ If you want to use this in your own javascript projects, you need something like
 
     <script src='packer.growing.js'></script>
     <script>
-      var packer = new Packer(1000, 1000);   // or:  new GrowingPacker();
+      var packer = new Packer(1000, 1000); // or:  new GrowingPacker(1000,1000);
       var blocks = [
         { w: 100, h: 100 },
         { w: 100, h: 100 },

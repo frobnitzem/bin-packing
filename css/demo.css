@@ -1,5 +1,6 @@
 
-#settings                  { width: 12em; padding: 1em; display: inline-block; float: left; border: 1px solid #999; background-color: #EEE; }
+#main                      { position: relative; margin: 0; padding: 0; }
+#settings                  { width: 12em; padding: 1em; display: inline-block; border: 1px solid #999; background-color: #EEE; position: absolute; left: 0em; }
 #settings .examples        { margin-bottom: 1em; }
 #settings .blocks          { }
 #settings .blocks .example { color: #999; font-style: italic; float: right; margin-right: 1em; }
@@ -9,8 +10,8 @@
 #settings .ratio           { clear: both; border: 1px solid #999; padding: 1em; }
 #settings .nofit           { display: none; border: 1px solid red; margin-top: 1em; padding: 1em; }
 
-#packing                   { margin-left: 15em; }
-#canvas                    { background-color: #FBFBFB; }
+#packing                   { margin: 0 1em; position: absolute; left: 14em; overflow: scroll; }
+#canvas                    { background-color: #FBFBFB; border: 1px solid black; }
 #unsupported               { border: 1px solid red; background-color: #FFFFAD; padding: 1em; margin: 1em; }
 
 textarea { resize: none; }
