@@ -7,6 +7,7 @@
 
   * packer.js         - simple algorithm for a fixed width/height bin
   * packer.growing.js - complex algorithm that grows automatically
+  * packer.cols.js    - column-based layout
 
  TODO
  ====
@@ -55,14 +56,28 @@ Demo = {
 
     var blocks = Demo.blocks.deserialize(Demo.el.blocks.val());
     var packer = Demo.packer();
+    const sz = Demo.el.size.val();
 
     Demo.sort.now(blocks);
 
-    packer.fit(blocks);
+    if(sz == 'columns') {
+        blocks.forEach(function(block){
+            block.w = [block.w];
+        });
+        packer.assign(blocks);
+        packer.root = { w: packer.wid, h: packer.ht };
+        const x = packer.colStarts();
+        blocks.forEach(function(block){
+            block.fit.x = x[block.fit.col][0]
+            block.w = block.w[0];
+        });
+    } else {
+        packer.fit(blocks);
+    }
 
     Demo.canvas.reset(packer.root.w, packer.root.h);
     Demo.canvas.blocks(blocks);
-    if(Demo.el.size.val() != 'automatic')
+    if(sz != 'automatic' && sz != 'columns')
         Demo.canvas.boundary(packer.root);
     Demo.report(blocks, packer.root.w, packer.root.h);
   },
@@ -70,17 +85,19 @@ Demo = {
   //---------------------------------------------------------------------------
 
   packer: function() {
+    var outer = $("#packing");
+    var pos   = outer.offset();
+    var win   = $(window);
+    var sz = { w: win.width() - pos.left,
+               h: win.height() - pos.top};
+
     var size = Demo.el.size.val();
-    if (size == 'automatic') {
-      var outer = $("#packing");
-      var pos   = outer.offset();
-      var win   = $(window);
-      var sz = { w: win.width() - pos.left,
-                 h: win.height() - pos.top};
+    if (size == 'columns') {
+      return new ColLayout(1, sz.w / sz.h);
+    } else if (size == 'automatic') {
       outer.width(sz.w); outer.height(sz.h);
       return new GrowingPacker(sz.w, sz.h);
-    }
-    else {
+    } else {
       var dims = size.split("x");
       return new Packer(parseInt(dims[0]), parseInt(dims[1]));
     }

@@ -62,20 +62,25 @@ GrowingPacker.prototype = {
     //console.log("avail: " + w+" x "+h);
     this.maxw = w;
     this.maxh = h;
-    this.root = { x: 0, y: 0, w: 0, h: 0 };
+    this.root = { x: 0, y: 0, w: 0, h: 0,
+                  right: { w: 0, h: 0},
+                  left:  { w: 0, h: 0} };
   },
 
 
   fit: function(blocks) {
-    var n, node, block, len = blocks.length;
+    blocks.forEach(this.add.bind(this));
+  },
 
-    for (n = 0; n < len ; n++) {
-      block = blocks[n];
-      if (node = this.findNode(this.root, block.w, block.h))
-        block.fit = this.splitNode(node, block.w, block.h);
-      else
-        block.fit = this.grow(block.w, block.h);
+  add: function(block) {
+    if(!this.root.used) {
+        block.fit = this.growDown(block.w, block.h);
     }
+    const node = this.findNode(this.root, block.w, block.h);
+    if (node)
+      block.fit = this.splitNode(node, block.w, block.h);
+    else
+      block.fit = this.grow(block.w, block.h);
   },
 
   findNode: function(root, w, h) {
@@ -113,7 +118,7 @@ GrowingPacker.prototype = {
     else if (canGrowDown)
       return this.growDown(w, h);
     else
-      return null; // need to ensure sensible root starting size to avoid this happening
+      return null;
   },
 
   growRight: function(w, h) {
